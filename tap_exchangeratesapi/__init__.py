@@ -11,7 +11,7 @@ import copy
 
 from datetime import date, datetime, timedelta
 
-base_url = 'http://api.exchangeratesapi.io/'
+base_url = 'http://api.exchangeratesapi.io/v1/'
 
 logger = singer.get_logger()
 session = requests.Session()
