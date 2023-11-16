@@ -14,7 +14,6 @@ from datetime import date, datetime, timedelta
 base_url = 'http://api.exchangeratesapi.io/v1/'
 
 logger = singer.get_logger()
-logger.info('exchangerates init')
 session = requests.Session()
 
 DATE_FORMAT='%Y-%m-%d'
@@ -48,7 +47,6 @@ def request(url, params):
     return response
     
 def do_sync(base, start_date, access_key):
-    logger.info('Enter do_sync')
     state = {'start_date': start_date}
     next_date = start_date
     prev_schema = {}
@@ -92,17 +90,15 @@ def do_sync(base, start_date, access_key):
 
 
 def main():
-    logger.info('Enter main')
     parser = argparse.ArgumentParser()
 
-    logger.info('main 1')
     parser.add_argument(
         '-c', '--config', help='Config file', required=False)
     parser.add_argument(
         '-s', '--state', help='State file', required=False)
 
     args = parser.parse_args()
-    logger.info('main 2')
+
     if args.config:
         with open(args.config) as file:
             config = json.load(file)
@@ -115,12 +111,10 @@ def main():
     else:
         state = {}
 
-    logger.info('main 3')
     start_date = state.get('start_date') or config.get('start_date') or datetime.utcnow().strftime(DATE_FORMAT)
     start_date = singer.utils.strptime_with_tz(start_date).date().strftime(DATE_FORMAT)
     access_key = config.get('access_key')
 
-    logger.info('main 4')
     do_sync(config.get('base', 'USD'), start_date, access_key)
 
 
